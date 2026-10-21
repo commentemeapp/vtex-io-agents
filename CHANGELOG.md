@@ -8,6 +8,14 @@ agentes son los mismos; cambian el nombre, el repositorio y la incorporación de
 
 ## [Sin publicar]
 
+## [0.2.1] - 2026-10-21
+
+### Cambiado
+
+- README con imagen de cabecera para tema claro y tema oscuro (`<picture>` con `prefers-color-scheme`).
+
+## [0.2.0] - 2026-09-26
+
 ### Agregado
 
 - El plugin trae el servidor MCP `vtex-io` ([vtex-io-mcp](https://github.com/zeluizr/vtex-io-mcp)), ejecutado con
