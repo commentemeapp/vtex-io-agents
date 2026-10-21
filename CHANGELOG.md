@@ -8,6 +8,8 @@ agentes son los mismos; cambian el nombre, el repositorio y la incorporación de
 
 ## [Sin publicar]
 
+## [0.2.2] - 2026-10-21
+
 ### Corregido
 
 - `scripts/verificar.sh`: las búsquedas de rastros ignoran archivos binarios (`grep -I`). En macOS, los PNG de la
