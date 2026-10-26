@@ -1,29 +1,37 @@
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/readme-header-dark.png">
-  <source media="(prefers-color-scheme: light)" srcset=".github/assets/readme-header.png">
-  <img alt="Cinco especialidades de desarrollo: exploración, revisión, pruebas, arquitectura y documentación conectadas a un servidor MCP" src=".github/assets/readme-header.png" width="100%">
-</picture>
+<p align="center">
+	<img src="assets/banner.png" width="100%" alt="vtex-io-agents · Cinco subagentes de Claude Code para VTEX IO, con el servidor MCP vtex-io-mcp incluido.">
+</p>
 
 # vtex-io-agents
 
-**Cinco subagentes de Claude Code para VTEX IO y el servidor MCP `vtex-io-mcp`, en un solo plugin. Los agentes
-exploran, revisan, verifican, diseñan integraciones y buscan documentación; el servidor les da las props de los
-blocks, las APIs y la documentación de VTEX sin salir del editor.**
+**Cinco subagentes de Claude Code para VTEX IO, con el servidor MCP vtex-io-mcp incluido.**
 
-Construido sobre las [skills oficiales de VTEX](https://github.com/vtex/skills). Gratis, de código abierto y
-continuación de `vtex-agents`, que se retiró junto con su marketplace.
+[![versión](https://img.shields.io/github/v/tag/zeluizr/vtex-io-agents?label=versi%C3%B3n&labelColor=005278&color=FFBD38)](./CHANGELOG.md)
+[![licencia](https://img.shields.io/github/license/zeluizr/vtex-io-agents?label=licencia&labelColor=005278&color=FFBD38)](./LICENSE)
 
-[![licencia](https://badgen.net/github/license/zeluizr/vtex-io-agents?color=142032)](./LICENSE)
-[![último commit](https://badgen.net/github/last-commit/zeluizr/vtex-io-agents)](https://github.com/zeluizr/vtex-io-agents/commits)
-[![estrellas](https://badgen.net/github/stars/zeluizr/vtex-io-agents)](https://github.com/zeluizr/vtex-io-agents/stargazers)
+## Instalación
 
-Versión 0.2.0, según `.claude-plugin/marketplace.json`.
+```bash
+/plugin marketplace add zeluizr/vtex-io-agents
+/plugin install vtex-io-agents@vtex-io-agents
+```
 
----
+Reinicia Claude Code o corre `/reload-plugins`. Los agentes aparecen en el typeahead de `@` como
+`vtex-io-agents:vtex-reviewer`, y el servidor MCP como `vtex-io`. Si ya tenías `vtex-io-mcp` agregado con
+`claude mcp add vtex-io`, quítalo con `claude mcp remove vtex-io` para no tener el servidor dos veces.
 
-## Qué incluye
+## Uso rápido
 
-| Agente                       | Qué hace                                                                                    | Skills que precarga                                                                                                                     | Herramientas del servidor MCP                                             | Modelo    |
+```
+@vtex-io-agents:vtex-reviewer revisa lo que acabo de cambiar en node/clients
+```
+
+No hace falta nombrarlos: "antes de publicar, corre las verificaciones y revisa el diff" también delega. Para una
+sesión completa con un agente, `claude --agent vtex-io-agents:vtex-integration-architect`.
+
+## Que incluye
+
+| Agente                       | Que hace                                                                                    | Skills que precarga                                                                                                                     | Herramientas del servidor MCP                                             | Modelo    |
 | ---------------------------- | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | --------- |
 | `vtex-explorer`              | Mapea la estructura de una app VTEX IO, sus bloques y los contratos que expone. Read-only.  | `vtex-io-app-contract`, `vtex-io-render-runtime-and-blocks`                                                                             | `lookup-block-props`, `explain-concept`                                   | haiku     |
 | `vtex-reviewer`              | Revisa el diff antes del publish: seguridad, políticas del manifest, performance, contrato. | `vtex-io-security-boundaries`, `vtex-io-auth-and-policies`, `vtex-io-application-performance`, `architecture-well-architected-commerce` | `lookup-vtex-api`, `search-concepts`, `explain-concept`                   | `inherit` |
@@ -37,10 +45,26 @@ props de los blocks de Store Framework; no llama a APIs externas ni pide credenc
 agentes, deja en la conversación principal las herramientas de scaffolding (`scaffold-vtex-app`,
 `scaffold-node-service`, `scaffold-graphql`, `add-block`) y los resources `vtex://concepts` y `vtex://courses`.
 
-Ningún agente precarga más de cuatro skills ni tiene `Write` o `Edit`. El razonamiento detrás de cada decisión está
+Ningún agente precarga mas de cuatro skills ni tiene `Write` o `Edit`. El razonamiento detrás de cada decisión está
 en [docs/agentes.md](docs/agentes.md).
 
-## Cómo funciona
+## Por que existe
+
+Construido sobre las [skills oficiales de VTEX](https://github.com/vtex/skills), sin costo y de código abierto. Es la
+continuación de `vtex-agents`, que se retiró junto con su marketplace.
+
+## Documentación
+
+### Requisitos
+
+- Claude Code con soporte de plugins.
+- Node `>= 18`, para que `npx` ejecute el servidor MCP.
+- Las skills oficiales de VTEX instaladas, con `gh skill install vtex/skills` o `npx skills add vtex/skills`.
+  `--scope user` las deja disponibles en todos los proyectos. Sin ellas los agentes funcionan, pero degradados:
+  Claude Code omite las skills que no encuentra y conserva el flujo de cada agente, sin el conocimiento de VTEX que
+  hace precisas sus respuestas.
+
+### Como funciona
 
 1. **La `description`** de cada agente es lo que Claude lee para decidir a quién delegar. Están escritas para que la
    delegación ocurra sola: "úsalo proactivamente antes de cualquier cambio estructural", "úsalo antes de
@@ -51,51 +75,11 @@ en [docs/agentes.md](docs/agentes.md).
    prefijo `mcp__plugin_vtex-io-agents_vtex-io__`; si el servidor no está en la sesión, el agente sigue con lo que
    tiene y lo dice.
 
-## Requisitos
+### El servidor MCP, directo
 
-- Claude Code con soporte de plugins.
-- Node `>= 18`, para que `npx` ejecute el servidor MCP.
-- Las skills oficiales de VTEX instaladas, con `gh skill install vtex/skills` o `npx skills add vtex/skills`. Sin
-  ellas los agentes funcionan, pero degradados: Claude Code omite las skills que no encuentra y conserva el flujo de
-  cada agente, sin el conocimiento de VTEX que hace precisas sus respuestas. `--scope user` las deja disponibles en
-  todos los proyectos.
-
-## Instalación
-
-```bash
-/plugin marketplace add zeluizr/vtex-io-agents
-/plugin install vtex-io-agents@vtex-io-agents
-```
-
-Reinicia Claude Code o corre `/reload-plugins`. Los agentes aparecen en el typeahead de `@` como
-`vtex-io-agents:vtex-reviewer`, y el servidor MCP como `vtex-io`.
-
-Si ya tenías `vtex-io-mcp` agregado con `claude mcp add vtex-io`, quítalo con `claude mcp remove vtex-io` para no
-tener el servidor dos veces.
-
-## Uso
-
-**Por mención.**
-
-```
-@vtex-io-agents:vtex-reviewer revisa lo que acabo de cambiar en node/clients
-```
-
-**Por lenguaje natural.** No hace falta nombrarlos.
-
-```
-antes de publicar, corre las verificaciones y revisa el diff
-```
-
-**Por sesión completa.**
-
-```bash
-claude --agent vtex-io-agents:vtex-integration-architect
-```
-
-**El servidor MCP, directo.** "¿Qué props acepta `flex-layout.row`?", "arma un servicio Node con una ruta pública
-`GET /_v/order/:orderId`", "busca en la documentación cómo funcionan las CSS Handles". Las herramientas y los
-resources están en el [README de vtex-io-mcp](https://github.com/zeluizr/vtex-io-mcp#herramientas).
+"Que props acepta `flex-layout.row`?", "arma un servicio Node con una ruta pública `GET /_v/order/:orderId`", "busca
+en la documentación como funcionan las CSS Handles". Las herramientas y los resources están en el
+[README de vtex-io-mcp](https://github.com/zeluizr/vtex-io-mcp#herramientas).
 
 ### Fork local de la documentación
 
@@ -107,14 +91,14 @@ git clone https://github.com/vtexdocs/dev-portal-content.git ~/dev-portal-conten
 claude --add-dir ~/dev-portal-content
 ```
 
-## Actualizar y desinstalar
+### Actualizar y desinstalar
 
 | Acción      | Comando                                           |
 | ----------- | ------------------------------------------------- |
 | Actualizar  | `/plugin marketplace update vtex-io-agents`       |
 | Desinstalar | `/plugin uninstall vtex-io-agents@vtex-io-agents` |
 
-## Estructura
+### Estructura
 
 ```
 .claude-plugin/marketplace.json       catálogo del marketplace de Claude Code
@@ -122,16 +106,16 @@ plugins/vtex-io-agents/
 	.claude-plugin/plugin.json          manifiesto del plugin; mcpServers apunta a .mcp.json
 	.mcp.json                           el servidor MCP vtex-io: npx -y vtex-io-mcp
 	agents/                             los cinco agentes, uno por archivo
-docs/agentes.md                       por qué cada agente es como es
+docs/agentes.md                       por que cada agente es como es
 scripts/verificar.sh                  gate de este repositorio
 scripts/probar-mcp.mjs                arranca el servidor MCP y comprueba las herramientas que usan los agentes
+assets/                               header del README
 ```
 
-## Desarrollo
+### Desarrollo
 
-Para desarrollar este repositorio se requiere **Node >= 20**, según
-[package.json](package.json). El requisito de Node >= 18 indicado arriba corresponde
-a ejecutar el servidor MCP. Las definiciones de los cinco agentes viven en
+Para desarrollar este repositorio necesitas **Node >= 20**, según [package.json](package.json); el Node >= 18 de
+Requisitos es para ejecutar el servidor MCP. Las definiciones de los cinco agentes viven en
 [plugins/vtex-io-agents/agents/](plugins/vtex-io-agents/agents/) y su conexión MCP en
 [.mcp.json](plugins/vtex-io-agents/.mcp.json).
 
@@ -157,18 +141,15 @@ claude --plugin-dir ./plugins/vtex-io-agents
 ```
 
 La versión vive en tres lugares: arriba en `.claude-plugin/marketplace.json`, en la entrada del plugin del mismo
-archivo y en `plugins/vtex-io-agents/.claude-plugin/plugin.json`. Se sube en los tres a la vez; sin subirla, Claude
+archivo y en `plugins/vtex-io-agents/.claude-plugin/plugin.json`. Súbela en los tres a la vez; sin subirla, Claude
 Code no entrega el cambio a quien ya tiene el plugin.
 
-## Contribuir
+## Contribuir · Licencia
 
-Conventional Commits. Las ramas salen de `dev` y el pull request va contra `dev`, nunca contra `qa` ni contra `main`;
-la promoción es merge de la rama entera. Un agente nuevo tiene que pasar la pregunta de
-[docs/agentes.md](docs/agentes.md#por-qué-no-hay-más-agentes): ¿genera ruido intermedio que la conversación principal
-no necesita ver? Si no, no hace falta.
+Conventional Commits, rama desde `dev` y PR contra `dev`; un agente nuevo tiene que pasar la pregunta de
+[docs/agentes.md](docs/agentes.md#por-qué-no-hay-más-agentes).
+[MIT](./LICENSE).
 
-## Licencia
+---
 
-[MIT](./LICENSE)
-
-_Hecho con amor y café por [zeluizr](https://github.com/zeluizr) y con la ayuda de [Claude](https://claude.ai/referral/Cz_UimA0NQ) ☕_
+Hecho por [commente.me](https://commente.me) · hola@commente.me
