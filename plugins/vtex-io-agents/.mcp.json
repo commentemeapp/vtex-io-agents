@@ -3,7 +3,7 @@
 		"vtex-io": {
 			"type": "stdio",
 			"command": "npx",
-			"args": ["-y", "vtex-io-mcp"]
+			"args": ["-y", "@commenteme/vtex-io-mcp"]
 		}
 	}
 }
