@@ -8,6 +8,15 @@ agentes son los mismos; cambian el nombre, el repositorio y la incorporación de
 
 ## [Sin publicar]
 
+## [0.2.3] - 2026-10-29
+
+### Cambiado
+
+- El servidor MCP se ejecuta con `npx -y @commenteme/vtex-io-mcp`: el paquete cambió de nombre en npm y `vtex-io-mcp`
+  queda descontinuado. `scripts/verificar.sh` exige el nombre nuevo en `.mcp.json`.
+- El repositorio pasa a `github.com/commentemeapp/vtex-io-agents`; se instala con
+  `/plugin marketplace add commentemeapp/vtex-io-agents`. Los enlaces a los otros repositorios también apuntan a `commentemeapp`.
+
 ## [0.2.2] - 2026-10-21
 
 ### Corregido

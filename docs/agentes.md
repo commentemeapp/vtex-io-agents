@@ -30,7 +30,7 @@ No es paranoia, es división del trabajo. Un agente que puede escribir se convie
 
 ### El servidor MCP es fuente, no cerebro
 
-El plugin trae el servidor MCP `vtex-io`, que es [vtex-io-mcp](https://github.com/zeluizr/vtex-io-mcp) ejecutado con `npx -y vtex-io-mcp`. Viaja con su conocimiento dentro del paquete: 391 documentos de VTEX, los 10 cursos oficiales de VTEX IO, la referencia de las APIs REST y las props de los blocks de Store Framework. No llama a ninguna API externa ni pide credenciales.
+El plugin trae el servidor MCP `vtex-io`, que es [vtex-io-mcp](https://github.com/commentemeapp/vtex-io-mcp) ejecutado con `npx -y @commenteme/vtex-io-mcp`. Viaja con su conocimiento dentro del paquete: 391 documentos de VTEX, los 10 cursos oficiales de VTEX IO, la referencia de las APIs REST y las props de los blocks de Store Framework. No llama a ninguna API externa ni pide credenciales.
 
 La decisión es qué agente recibe qué herramienta, y la regla fue la misma que para las skills: cada agente recibe solo las herramientas que su caso típico necesita, y ninguna recibe las de scaffolding. Las tres herramientas que generan código (`scaffold-vtex-app`, `scaffold-node-service`, `scaffold-graphql`) y `add-block` quedan para la conversación principal, que es donde se escribe código. Un agente read-only con herramientas de scaffolding sería una contradicción.
 

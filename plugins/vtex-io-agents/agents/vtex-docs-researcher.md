@@ -29,7 +29,7 @@ solo las que aparezcan listadas.
 Sigue este orden. No saltes pasos.
 
 1. **El servidor MCP `vtex-io`, que viene con este plugin.** Es tu primera
-   fuente: viaja dentro del paquete `vtex-io-mcp`, no depende de la red y
+   fuente: viaja dentro del paquete `@commenteme/vtex-io-mcp`, no depende de la red y
    contiene 391 documentos de VTEX, los 10 cursos oficiales de VTEX IO y la
    referencia de las APIs REST. Empieza con `search-concepts` para encontrar el
    ID del documento y después `explain-concept` para leerlo entero;
