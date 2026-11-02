@@ -1,12 +1,12 @@
-# Gate del repositorio en cada push y pull request de las tres ramas.
+# Gate del repositorio en cada push y pull request de las dos ramas (dev y main).
 # El mismo ./scripts/verificar.sh que se corre en la máquina.
 name: ci
 
 on:
   push:
-    branches: [dev, qa, main]
+    branches: [dev, main]
   pull_request:
-    branches: [dev, qa, main]
+    branches: [dev, main]
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -61,33 +61,22 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   ramas:
-    name: flujo dev -> qa -> main
+    name: flujo dev -> main
     runs-on: ubuntu-latest
     timeout-minutes: 5
-    if: github.event_name == 'push' && (github.ref_name == 'qa' || github.ref_name == 'main')
+    if: github.event_name == 'push' && github.ref_name == 'main'
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      # La promoción es merge de la rama entera: qa no tiene commits propios, solo
-      # merges de dev; main solo merges de qa, y el commit de main lleva tag.
-      - name: qa solo recibe lo que ya está en dev
-        if: github.ref_name == 'qa'
+      # Flujo dev -> main, sin qa (decisión del usuario el 30/10/2026). La promoción es
+      # merge de la rama entera: main solo tiene merges de dev, y el commit de main lleva tag.
+      - name: main solo recibe lo que ya está en dev, con tag anotado
         run: |
-          git fetch --quiet origin dev
+          git fetch --quiet --tags origin dev
           PROPIOS=$(git log --no-merges --format='%h %s' origin/dev.."$GITHUB_SHA")
           if [ -n "$PROPIOS" ]; then
-            echo "::error::qa tiene commits que no están en dev:"
-            echo "$PROPIOS"
-            exit 1
-          fi
-      - name: main solo recibe lo que ya está en qa, con tag anotado
-        if: github.ref_name == 'main'
-        run: |
-          git fetch --quiet --tags origin qa
-          PROPIOS=$(git log --no-merges --format='%h %s' origin/qa.."$GITHUB_SHA")
-          if [ -n "$PROPIOS" ]; then
-            echo "::error::main tiene commits que no están en qa:"
+            echo "::error::main tiene commits que no están en dev:"
             echo "$PROPIOS"
             exit 1
           fi
