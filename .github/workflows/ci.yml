@@ -49,16 +49,23 @@ jobs:
     name: búsqueda de secretos
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    permissions:
-      contents: read
-      pull-requests: read
+    # El binario de gitleaks, no gitleaks-action: la action pide licencia en
+    # repositorios de una organización. Versión fija y checksum verificado.
+    env:
+      GITLEAKS_VERSION: 8.28.0
+      GITLEAKS_SHA256: a65b5253807a68ac0cafa4414031fd740aeb55f54fb7e55f386acb52e6a840eb
     steps:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: instalar gitleaks
+        run: |
+          archivo="gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          curl -fsSLO "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/${archivo}"
+          echo "${GITLEAKS_SHA256}  ${archivo}" | sha256sum --check
+          tar -xzf "${archivo}" gitleaks
+      - name: historial completo
+        run: ./gitleaks git --redact --no-banner --verbose .
 
   ramas:
     name: flujo dev -> main
