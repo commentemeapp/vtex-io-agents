@@ -6,13 +6,13 @@
 
 **Cinco subagentes de Claude Code para VTEX IO, con el servidor MCP vtex-io-mcp incluido.**
 
-[![versión](https://img.shields.io/github/v/tag/zeluizr/vtex-io-agents?label=versi%C3%B3n&labelColor=005278&color=FFBD38)](./CHANGELOG.md)
-[![licencia](https://img.shields.io/github/license/zeluizr/vtex-io-agents?label=licencia&labelColor=005278&color=FFBD38)](./LICENSE)
+[![versión](https://img.shields.io/github/v/tag/commentemeapp/vtex-io-agents?label=versi%C3%B3n&labelColor=005278&color=FFBD38)](./CHANGELOG.md)
+[![licencia](https://img.shields.io/github/license/commentemeapp/vtex-io-agents?label=licencia&labelColor=005278&color=FFBD38)](./LICENSE)
 
 ## Instalación
 
 ```bash
-/plugin marketplace add zeluizr/vtex-io-agents
+/plugin marketplace add commentemeapp/vtex-io-agents
 /plugin install vtex-io-agents@vtex-io-agents
 ```
 
@@ -39,7 +39,7 @@ sesión completa con un agente, `claude --agent vtex-io-agents:vtex-integration-
 | `vtex-integration-architect` | Diseña y audita integraciones con ERP y marketplaces, con los trade offs explícitos.        | `vtex-io-client-integration`, `vtex-io-events-and-workers`, `marketplace-catalog-sync`, `marketplace-order-hook`                        | `lookup-vtex-api`, `search-concepts`, `explain-concept`, `search-courses` | opus      |
 | `vtex-docs-researcher`       | Busca en la documentación de VTEX y cita siempre la fuente.                                 | ninguna, a propósito                                                                                                                    | `search-concepts`, `explain-concept`, `search-courses`, `lookup-vtex-api` | haiku     |
 
-El servidor MCP es [vtex-io-mcp](https://github.com/zeluizr/vtex-io-mcp), ejecutado con `npx -y vtex-io-mcp`. Trae
+El servidor MCP es [vtex-io-mcp](https://github.com/commentemeapp/vtex-io-mcp), ejecutado con `npx -y @commenteme/vtex-io-mcp`. Trae
 dentro del paquete 391 documentos de VTEX, los 10 cursos oficiales de VTEX IO, la referencia de las APIs REST y las
 props de los blocks de Store Framework; no llama a APIs externas ni pide credenciales. Además de lo que usan los
 agentes, deja en la conversación principal las herramientas de scaffolding (`scaffold-vtex-app`,
@@ -79,7 +79,7 @@ continuación de `vtex-agents`, que se retiró junto con su marketplace.
 
 "Que props acepta `flex-layout.row`?", "arma un servicio Node con una ruta pública `GET /_v/order/:orderId`", "busca
 en la documentación como funcionan las CSS Handles". Las herramientas y los resources están en el
-[README de vtex-io-mcp](https://github.com/zeluizr/vtex-io-mcp#herramientas).
+[README de vtex-io-mcp](https://github.com/commentemeapp/vtex-io-mcp#herramientas).
 
 ### Fork local de la documentación
 
@@ -104,7 +104,7 @@ claude --add-dir ~/dev-portal-content
 .claude-plugin/marketplace.json       catálogo del marketplace de Claude Code
 plugins/vtex-io-agents/
 	.claude-plugin/plugin.json          manifiesto del plugin; mcpServers apunta a .mcp.json
-	.mcp.json                           el servidor MCP vtex-io: npx -y vtex-io-mcp
+	.mcp.json                           el servidor MCP vtex-io: npx -y @commenteme/vtex-io-mcp
 	agents/                             los cinco agentes, uno por archivo
 docs/agentes.md                       por que cada agente es como es
 scripts/verificar.sh                  gate de este repositorio
@@ -120,7 +120,7 @@ Requisitos es para ejecutar el servidor MCP. Las definiciones de los cinco agent
 [.mcp.json](plugins/vtex-io-agents/.mcp.json).
 
 ```bash
-git clone https://github.com/zeluizr/vtex-io-agents.git
+git clone https://github.com/commentemeapp/vtex-io-agents.git
 cd vtex-io-agents
 npm ci
 ./scripts/verificar.sh
