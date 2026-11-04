@@ -75,10 +75,10 @@ if [ -f "$MCP" ] && [ -f "$PLUGIN" ]; then
 			if (s.command !== "npx") errores.push("el comando del servidor no es npx");
 			const args = s.args || [];
 			if (!args.includes("-y")) errores.push("falta -y en los args de npx");
-			if (!args.some((a) => /^vtex-io-mcp(@.+)?$/.test(a))) errores.push("los args no ejecutan el paquete vtex-io-mcp");
+			if (!args.some((a) => /^@commenteme\/vtex-io-mcp(@.+)?$/.test(a))) errores.push("los args no ejecutan el paquete @commenteme/vtex-io-mcp");
 		}
 		if (errores.length) { console.error(errores.join("\n")); process.exit(1); }
-	' "$PLUGIN" "$MCP" "$SERVIDOR" 2>/tmp/mcp-errores.txt && ok "plugin.json y .mcp.json ejecutan npx -y vtex-io-mcp" || {
+	' "$PLUGIN" "$MCP" "$SERVIDOR" 2>/tmp/mcp-errores.txt && ok "plugin.json y .mcp.json ejecutan npx -y @commenteme/vtex-io-mcp" || {
 		sed 's/^/    /' /tmp/mcp-errores.txt
 		mal "configuración del servidor MCP"
 	}
