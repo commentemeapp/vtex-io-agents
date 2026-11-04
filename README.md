@@ -152,4 +152,4 @@ Conventional Commits, rama desde `dev` y PR contra `dev`; un agente nuevo tiene 
 
 ---
 
-Hecho por [commente.me](https://commente.me) · hola@commente.me
+Hecho por [commente.me](https://www.commente.me) · hablecon@commente.me
