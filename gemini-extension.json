@@ -1,0 +1,14 @@
+{
+	"name": "vtex-io-agents",
+	"version": "0.3.0",
+	"description": "Cinco subagentes para VTEX IO (exploración, revisión previa al publish, QA, arquitectura de integraciones y documentación) más el servidor MCP vtex-io-mcp: scaffolding, props de blocks y documentación de VTEX sin salir del editor.",
+	"mcpServers": {
+		"vtex-io": {
+			"command": "npx",
+			"args": [
+				"-y",
+				"@commenteme/vtex-io-mcp"
+			]
+		}
+	}
+}
