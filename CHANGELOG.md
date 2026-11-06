@@ -8,6 +8,17 @@ agentes son los mismos; cambian el nombre, el repositorio y la incorporación de
 
 ## [Sin publicar]
 
+## [0.3.0] - 2026-11-06
+
+### Agregado
+
+- Versiones de los cinco agentes para Gemini CLI (extensión con `gemini-extension.json` y `agents/` en la raíz),
+  Codex (`adaptadores/codex/*.toml`), GitHub Copilot (`adaptadores/copilot/*.agent.md`) y Cursor
+  (`adaptadores/cursor/*.md`), generadas desde los agentes de Claude Code con `scripts/exportar.mjs`.
+- El gate comprueba que esas versiones coinciden con su fuente.
+
+Los agentes de Claude Code no cambian.
+
 ## [0.2.3] - 2026-10-29
 
 ### Cambiado

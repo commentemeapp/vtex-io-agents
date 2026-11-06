@@ -91,6 +91,24 @@ git clone https://github.com/vtexdocs/dev-portal-content.git ~/dev-portal-conten
 claude --add-dir ~/dev-portal-content
 ```
 
+### En otros agentes
+
+Los cinco agentes también funcionan en Gemini CLI, Codex, GitHub Copilot y Cursor. Cada versión se genera desde los
+archivos de Claude Code con `scripts/exportar.mjs`: cambian el frontmatter y los nombres de las herramientas, el texto
+es el mismo. Fuera de Claude Code no hay skills precargadas, así que cada agente empieza diciendo cuales cargar; las
+skills de VTEX se instalan en cualquiera de estos agentes con `npx skills add vtex/skills -a <agente>`.
+
+| Agente         | Instalación                                                                                                                                                                                                         | Probado                                   |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| Gemini CLI     | `gemini extensions install https://github.com/commentemeapp/vtex-io-agents`: trae los cinco agentes y el servidor MCP                                                                                               | validado con `gemini extensions validate` |
+| Codex          | Copia `adaptadores/codex/*.toml` a `~/.codex/agents/` y agrega el servidor con `codex mcp add vtex-io -- npx -y @commenteme/vtex-io-mcp`                                                                            | sí, Codex 0.166                           |
+| GitHub Copilot | Copia `adaptadores/copilot/*.agent.md` a `~/.copilot/agents/` o a `.github/agents/` del proyecto, y el servidor MCP como dice el [README de vtex-io-mcp](https://github.com/commentemeapp/vtex-io-mcp#clientes-mcp) | no                                        |
+| Cursor         | Copia `adaptadores/cursor/*.md` a `~/.cursor/agents/` o a `.cursor/agents/` del proyecto, y el servidor en `~/.cursor/mcp.json`                                                                                     | no                                        |
+
+En Copilot, las herramientas MCP van como `vtex-io/<herramienta>`; en Gemini CLI, como `mcp_vtex-io_<herramienta>`; en
+Codex y Cursor, el agente hereda las del servidor configurado. Cursor no tiene lista de herramientas por agente: los
+que no escriben van con `readonly: true`.
+
 ### Actualizar y desinstalar
 
 | Acción      | Comando                                           |
@@ -106,8 +124,12 @@ plugins/vtex-io-agents/
 	.claude-plugin/plugin.json          manifiesto del plugin; mcpServers apunta a .mcp.json
 	.mcp.json                           el servidor MCP vtex-io: npx -y @commenteme/vtex-io-mcp
 	agents/                             los cinco agentes, uno por archivo
+agents/                               los agentes para Gemini CLI (generados)
+gemini-extension.json                 manifiesto de la extensión de Gemini CLI (generado)
+adaptadores/                          los agentes para Codex, GitHub Copilot y Cursor (generados)
 docs/agentes.md                       por que cada agente es como es
 scripts/verificar.sh                  gate de este repositorio
+scripts/exportar.mjs                  genera las versiones para otros agentes
 scripts/probar-mcp.mjs                arranca el servidor MCP y comprueba las herramientas que usan los agentes
 assets/                               header del README
 ```
@@ -131,7 +153,8 @@ node scripts/probar-mcp.mjs
 la configuración del servidor MCP, el frontmatter de cada agente (nombre igual al archivo, `description`, tool
 `Skill` presente, sin `Write` ni `Edit`, máximo cuatro skills precargadas, prefijo MCP propio y skills que existen en
 `vtex/skills`), `claude plugin validate --strict`, Prettier, `bash -n` y una búsqueda de rastros de los proyectos de
-origen. `scripts/probar-mcp.mjs` arranca el servidor por stdio y falla si una herramienta que un agente declara no
+origen, además de comprobar que las versiones para otros agentes coinciden con su fuente. Después de cambiar un
+agente, corre `node scripts/exportar.mjs`. `scripts/probar-mcp.mjs` arranca el servidor por stdio y falla si una herramienta que un agente declara no
 existe. El CI suma la búsqueda de secretos con gitleaks y el control del flujo de ramas.
 
 Para probar el plugin sin publicarlo:
