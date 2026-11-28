@@ -4,9 +4,7 @@
 
 **Cinco subagentes de Claude Code para VTEX IO, con el servidor MCP vtex-io-mcp incluido.**
 
-[![versión](https://badgen.net/github/tag/commentemeapp/vtex-io-agents?color=005278)](./CHANGELOG.md)
-[![licencia](https://badgen.net/github/license/commentemeapp/vtex-io-agents)](./LICENSE)
-[![último commit](https://badgen.net/github/last-commit/commentemeapp/vtex-io-agents/main)](https://github.com/commentemeapp/vtex-io-agents/commits/main)
+Versión 0.3.0 · en desarrollo. Cambios en [CHANGELOG.md](CHANGELOG.md).
 
 ## Instalación
 
@@ -19,7 +17,32 @@ Reinicia Claude Code o corre `/reload-plugins`. Los agentes aparecen en el typea
 `vtex-io-agents:vtex-reviewer`, y el servidor MCP como `vtex-io`. Si ya tenías `vtex-io-mcp` agregado con
 `claude mcp add vtex-io`, quítalo con `claude mcp remove vtex-io` para no tener el servidor dos veces.
 
-## Uso rápido
+### En otros agentes
+
+Los cinco agentes también funcionan en Gemini CLI, Codex, GitHub Copilot y Cursor. Cada versión se genera desde los
+archivos de Claude Code con `scripts/exportar.mjs`: cambian el frontmatter y los nombres de las herramientas, el texto
+es el mismo. Fuera de Claude Code no hay skills precargadas, así que cada agente empieza diciendo cuales cargar; las
+skills de VTEX se instalan en cualquiera de estos agentes con `npx skills add vtex/skills -a <agente>`.
+
+| Agente         | Instalación                                                                                                                                                                                                         | Probado                                   |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
+| Gemini CLI     | `gemini extensions install https://github.com/commentemeapp/vtex-io-agents`: trae los cinco agentes y el servidor MCP                                                                                               | validado con `gemini extensions validate` |
+| Codex          | Copia `adaptadores/codex/*.toml` a `~/.codex/agents/` y agrega el servidor con `codex mcp add vtex-io -- npx -y @commenteme/vtex-io-mcp`                                                                            | sí, Codex 0.166                           |
+| GitHub Copilot | Copia `adaptadores/copilot/*.agent.md` a `~/.copilot/agents/` o a `.github/agents/` del proyecto, y el servidor MCP como dice el [README de vtex-io-mcp](https://github.com/commentemeapp/vtex-io-mcp#clientes-mcp) | no                                        |
+| Cursor         | Copia `adaptadores/cursor/*.md` a `~/.cursor/agents/` o a `.cursor/agents/` del proyecto, y el servidor en `~/.cursor/mcp.json`                                                                                     | no                                        |
+
+En Copilot, las herramientas MCP van como `vtex-io/<herramienta>`; en Gemini CLI, como `mcp_vtex-io_<herramienta>`; en
+Codex y Cursor, el agente hereda las del servidor configurado. Cursor no tiene lista de herramientas por agente: los
+que no escriben van con `readonly: true`.
+
+### Actualizar y desinstalar
+
+| Acción      | Comando                                           |
+| ----------- | ------------------------------------------------- |
+| Actualizar  | `/plugin marketplace update vtex-io-agents`       |
+| Desinstalar | `/plugin uninstall vtex-io-agents@vtex-io-agents` |
+
+## Uso
 
 ```
 @vtex-io-agents:vtex-reviewer revisa lo que acabo de cambiar en node/clients
@@ -28,7 +51,7 @@ Reinicia Claude Code o corre `/reload-plugins`. Los agentes aparecen en el typea
 No hace falta nombrarlos: "antes de publicar, corre las verificaciones y revisa el diff" también delega. Para una
 sesión completa con un agente, `claude --agent vtex-io-agents:vtex-integration-architect`.
 
-## Que incluye
+### Que incluye
 
 | Agente                       | Que hace                                                                                    | Skills que precarga                                                                                                                     | Herramientas del servidor MCP                                             | Modelo    |
 | ---------------------------- | ------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- | --------- |
@@ -47,21 +70,10 @@ agentes, deja en la conversación principal las herramientas de scaffolding (`sc
 Ningún agente precarga mas de cuatro skills ni tiene `Write` o `Edit`. El razonamiento detrás de cada decisión está
 en [docs/agentes.md](docs/agentes.md).
 
-## Por que existe
+### Por que existe
 
 Construido sobre las [skills oficiales de VTEX](https://github.com/vtex/skills), sin costo y de código abierto. Es la
 continuación de `vtex-agents`, que se retiró junto con su marketplace.
-
-## Documentación
-
-### Requisitos
-
-- Claude Code con soporte de plugins.
-- Node `>= 18`, para que `npx` ejecute el servidor MCP.
-- Las skills oficiales de VTEX instaladas, con `gh skill install vtex/skills` o `npx skills add vtex/skills`.
-  `--scope user` las deja disponibles en todos los proyectos. Sin ellas los agentes funcionan, pero degradados:
-  Claude Code omite las skills que no encuentra y conserva el flujo de cada agente, sin el conocimiento de VTEX que
-  hace precisas sus respuestas.
 
 ### Como funciona
 
@@ -90,50 +102,16 @@ git clone https://github.com/vtexdocs/dev-portal-content.git ~/dev-portal-conten
 claude --add-dir ~/dev-portal-content
 ```
 
-### En otros agentes
+## Requisitos
 
-Los cinco agentes también funcionan en Gemini CLI, Codex, GitHub Copilot y Cursor. Cada versión se genera desde los
-archivos de Claude Code con `scripts/exportar.mjs`: cambian el frontmatter y los nombres de las herramientas, el texto
-es el mismo. Fuera de Claude Code no hay skills precargadas, así que cada agente empieza diciendo cuales cargar; las
-skills de VTEX se instalan en cualquiera de estos agentes con `npx skills add vtex/skills -a <agente>`.
+- Claude Code con soporte de plugins.
+- Node `>= 18`, para que `npx` ejecute el servidor MCP.
+- Las skills oficiales de VTEX instaladas, con `gh skill install vtex/skills` o `npx skills add vtex/skills`.
+  `--scope user` las deja disponibles en todos los proyectos. Sin ellas los agentes funcionan, pero degradados:
+  Claude Code omite las skills que no encuentra y conserva el flujo de cada agente, sin el conocimiento de VTEX que
+  hace precisas sus respuestas.
 
-| Agente         | Instalación                                                                                                                                                                                                         | Probado                                   |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------- |
-| Gemini CLI     | `gemini extensions install https://github.com/commentemeapp/vtex-io-agents`: trae los cinco agentes y el servidor MCP                                                                                               | validado con `gemini extensions validate` |
-| Codex          | Copia `adaptadores/codex/*.toml` a `~/.codex/agents/` y agrega el servidor con `codex mcp add vtex-io -- npx -y @commenteme/vtex-io-mcp`                                                                            | sí, Codex 0.166                           |
-| GitHub Copilot | Copia `adaptadores/copilot/*.agent.md` a `~/.copilot/agents/` o a `.github/agents/` del proyecto, y el servidor MCP como dice el [README de vtex-io-mcp](https://github.com/commentemeapp/vtex-io-mcp#clientes-mcp) | no                                        |
-| Cursor         | Copia `adaptadores/cursor/*.md` a `~/.cursor/agents/` o a `.cursor/agents/` del proyecto, y el servidor en `~/.cursor/mcp.json`                                                                                     | no                                        |
-
-En Copilot, las herramientas MCP van como `vtex-io/<herramienta>`; en Gemini CLI, como `mcp_vtex-io_<herramienta>`; en
-Codex y Cursor, el agente hereda las del servidor configurado. Cursor no tiene lista de herramientas por agente: los
-que no escriben van con `readonly: true`.
-
-### Actualizar y desinstalar
-
-| Acción      | Comando                                           |
-| ----------- | ------------------------------------------------- |
-| Actualizar  | `/plugin marketplace update vtex-io-agents`       |
-| Desinstalar | `/plugin uninstall vtex-io-agents@vtex-io-agents` |
-
-### Estructura
-
-```
-.claude-plugin/marketplace.json       catálogo del marketplace de Claude Code
-plugins/vtex-io-agents/
-	.claude-plugin/plugin.json          manifiesto del plugin; mcpServers apunta a .mcp.json
-	.mcp.json                           el servidor MCP vtex-io: npx -y @commenteme/vtex-io-mcp
-	agents/                             los cinco agentes, uno por archivo
-agents/                               los agentes para Gemini CLI (generados)
-gemini-extension.json                 manifiesto de la extensión de Gemini CLI (generado)
-adaptadores/                          los agentes para Codex, GitHub Copilot y Cursor (generados)
-docs/agentes.md                       por que cada agente es como es
-scripts/verificar.sh                  gate de este repositorio
-scripts/exportar.mjs                  genera las versiones para otros agentes
-scripts/probar-mcp.mjs                arranca el servidor MCP y comprueba las herramientas que usan los agentes
-assets/                               header del README
-```
-
-### Desarrollo
+## Desarrollo
 
 Para desarrollar este repositorio necesitas **Node >= 20**, según [package.json](package.json); el Node >= 18 de
 Requisitos es para ejecutar el servidor MCP. Las definiciones de los cinco agentes viven en
@@ -166,10 +144,35 @@ La versión vive en tres lugares: arriba en `.claude-plugin/marketplace.json`, e
 archivo y en `plugins/vtex-io-agents/.claude-plugin/plugin.json`. Súbela en los tres a la vez; sin subirla, Claude
 Code no entrega el cambio a quien ya tiene el plugin.
 
-## Contribuir · Licencia
+### Contribuir
 
 Conventional Commits, rama desde `dev` y PR contra `dev`; un agente nuevo tiene que pasar la pregunta de
 [docs/agentes.md](docs/agentes.md#por-qué-no-hay-más-agentes).
+
+## Estructura
+
+```
+.claude-plugin/marketplace.json       catálogo del marketplace de Claude Code
+plugins/vtex-io-agents/
+	.claude-plugin/plugin.json          manifiesto del plugin; mcpServers apunta a .mcp.json
+	.mcp.json                           el servidor MCP vtex-io: npx -y @commenteme/vtex-io-mcp
+	agents/                             los cinco agentes, uno por archivo
+agents/                               los agentes para Gemini CLI (generados)
+gemini-extension.json                 manifiesto de la extensión de Gemini CLI (generado)
+adaptadores/                          los agentes para Codex, GitHub Copilot y Cursor (generados)
+docs/agentes.md                       por que cada agente es como es
+scripts/verificar.sh                  gate de este repositorio
+scripts/exportar.mjs                  genera las versiones para otros agentes
+scripts/probar-mcp.mjs                arranca el servidor MCP y comprueba las herramientas que usan los agentes
+.github/assets/                       banner del README
+```
+
+## Licencia
+
 [MIT](./LICENSE).
+
+Contacto: hablecon@commente.me
+
+---
 
 _Hecho con amor y café por [zeluizr](https://github.com/zeluizr) y con la ayuda de [Claude](https://claude.ai/referral/Cz_UimA0NQ) ☕_
